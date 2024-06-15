@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <title>ACME Inc.</title>
+    <style>
+        :root {
+            --dark-bg: #3b412b;
+            /* Dark Olive Green */
+            --dark-text: #a3b478;
+            /* Sage */
+            --light-bg: #ffffdb;
+            /* Light Cream */
+            --light-text: #596241;
+            /* Olive Green */
+            --dark-third-color: #a3b478;
+            /* Sage */
+            --light-third-color: #778357;
+            /* Moss Green as a vibrant accent */
+            --transition-speed: 0.25s;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--light-text);
+            transition: background-color var(--transition-speed) ease,
+                color var(--transition-speed) ease;
+        }
+
+        .text-light-third {
+            color: var(--light-third-color);
+        }
+
+        .dark-mode .text-dark-third {
+            color: var(--dark-third-color);
+        }
+
+        .accent-color {
+            color: var(--light-third-color);
+        }
+
+        .dark-mode .accent-color {
+            color: var(--dark-third-color);
+        }
+
+        .dark-mode {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+        }
+
+        nav {
+            background-color: inherit;
+            color: inherit;
+        }
+
+        .btn {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+            border: 2px solid transparent;
+        }
+
+        .dark-mode .btn {
+            background-color: var(--light-bg);
+            color: var(--light-text);
+            border: 2px solid transparent;
+        }
+
+        .btn-inverted {
+            background-color: var(--light-bg);
+            color: var(--light-text);
+            border: 2px solid var(--dark-bg);
+        }
+
+        .dark-mode .btn-inverted {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+            border: 2px solid var(--light-bg);
+        }
+
+        .btn:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--light-text);
+            border-color: #4a5568;
+        }
+
+        .btn-inverted:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            border-color: var(--third-color);
+        }
+
+        .dark-mode .btn:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: var(--dark-text);
+            border-color: #cbd5e0;
+        }
+
+        .dark-mode .btn-inverted:hover {
+            background-color: var(--third-color);
+            border-color: var(--third-color);
+        }
+
+        .icon-svg2 {
+            width: 25px;
+            height: 25px;
+            vertical-align: middle;
+            stroke: green;
+            fill: greenyellow;
+
+        }
+
+        .icon-svg {
+            width: 25px;
+            height: 25px;
+            vertical-align: middle;
+
+        }
+
+
+        /* Notification pop-up styles */
+        #notification {
+            position: fixed;
+            top: 20px;
+            /* Adjust this value to change the vertical location */
+            left: 50%;
+            transform: translateX(-50%);
+            /* Center horizontally */
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 4px 6px var(--dark-bg);
+            transition: all 0.5s ease;
+            border: 2px solid;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 3px;
+                /* Added 3px padding for small screens */
+            }
+        }
+
+        .wide-button {
+            padding: 0 60px;
+        }
+
+        /* Chatbot Styles */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        .chatbot-toggler {
+            position: fixed;
+            bottom: 30px;
+            right: 35px;
+            outline: none;
+            border: 2px solid white;
+            height: 50px;
+            width: 50px;
+            display: flex;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--dark-bg);
+            transition: all 0.2s ease;
+        }
+
+        body.show-chatbot .chatbot-toggler {
+            transform: rotate(90deg);
+        }
+
+        .chatbot-toggler span {
+            color: #fff;
+            position: absolute;
+        }
+
+        .chatbot-toggler span:last-child,
+        body.show-chatbot .chatbot-toggler span:first-child {
+            opacity: 0;
+        }
+
+        body.show-chatbot .chatbot-toggler span:last-child {
+            opacity: 1;
+        }
+
+        .chatbot {
+            position: fixed;
+            right: 35px;
+            bottom: 90px;
+            width: 420px;
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.5);
+            transform-origin: bottom right;
+            box-shadow: 0 0 128px 0 rgba(0, 0, 0, 0.1),
+                0 32px 64px -48px rgba(0, 0, 0, 0.5);
+            transition: all 0.1s ease;
+        }
+
+        body.show-chatbot .chatbot {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+        }
+
+        .chatbot header {
+            padding: 16px 0;
+            position: relative;
+            text-align: center;
+            color: #fff;
+            background: var(--dark-bg);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .chatbot header span {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            display: none;
+            cursor: pointer;
+            transform: translateY(-50%);
+        }
+
+        header h2 {
+            font-size: 1.4rem;
+        }
+
+        .chatbot .chatbox {
+            overflow-y: auto;
+            height: 510px;
+            padding: 30px 20px 100px;
+        }
+
+        .chatbot :where(.chatbox, textarea)::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chatbot :where(.chatbox, textarea)::-webkit-scrollbar-track {
+            background: #fff;
+            border-radius: 25px;
+        }
+
+        .chatbot :where(.chatbox, textarea)::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 25px;
+        }
+
+        .chatbox .chat {
+            display: flex;
+            list-style: none;
+        }
+
+        .chatbox .outgoing {
+            margin: 20px 0;
+            justify-content: flex-end;
+        }
+
+        .chatbox .incoming span {
+            width: 32px;
+            height: 32px;
+            color: #fff;
+            cursor: default;
+            text-align: center;
+            line-height: 32px;
+            align-self: flex-end;
+            background: var(--dark-bg);
+            border-radius: 4px;
+            margin: 0 10px 7px 0;
+        }
+
+        .chatbox .chat p {
+            white-space: pre-wrap;
+            padding: 12px 16px;
+            border-radius: 10px 10px 0 10px;
+            max-width: 75%;
+            color: #fff;
+            font-size: 0.95rem;
+            background: var(--dark-bg);
+        }
+
+        .chatbox .incoming p {
+            border-radius: 10px 10px 10px 0;
+        }
+
+        .chatbox .chat p.error {
+            color: #721c24;
+            background: #f8d7da;
+        }
+
+        .chatbox .incoming p {
+            color: #000;
+            background: #f2f2f2;
+        }
+
+        .chatbot .chat-input {
+            display: flex;
+            gap: 5px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: #fff;
+            padding: 3px 20px;
+            border-top: 1px solid #ddd;
+        }
+
+        .chat-input textarea {
+            height: 55px;
+            width: 100%;
+            color: grey;
+            border: none;
+            outline: none;
+            resize: none;
+            max-height: 180px;
+            padding: 15px 15px 15px 0;
+            font-size: 0.95rem;
+        }
+
+        .dark-mode .chat-input textarea {
+            color: grey;
+            /* Override the color in dark mode */
+        }
+
+        .chat-input span {
+            align-self: flex-end;
+            color: var(--dark-bg);
+            cursor: pointer;
+            height: 55px;
+            display: flex;
+            align-items: center;
+            visibility: hidden;
+            font-size: 1.35rem;
+        }
+
+        .chat-input textarea:valid~span {
+            visibility: visible;
+        }
+
+        @media (max-width: 490px) {
+            .chatbot-toggler {
+                right: 20px;
+                bottom: 20px;
+            }
+
+            .chatbot {
+                right: 0;
+                bottom: 0;
+                height: 100%;
+                border-radius: 0;
+                width: 100%;
+            }
+
+            .chatbot .chatbox {
+                height: 90%;
+                padding: 25px 15px 100px;
+            }
+
+            .chatbot .chat-input {
+                padding: 5px 15px;
+            }
+
+            .chatbot header span {
+                display: block;
+            }
+        }
+
+        .monochrome {
+            font-size: 25px;
+            color: black;
+            filter: grayscale(100%);
+        }
+
+        /* Chatbot dark mode styles */
+        .dark-mode .chatbot {
+            /* background: var(--dark-bg);
+            color: var(--dark-text); */
+        }
+
+        .dark-mode .chatbot header {
+            background: var(--light-bg);
+            color: var(--light-text);
+        }
+
+        .dark-mode .chatbot .chatbox .chat p {
+            /* background: var(--dark-bg);
+            color: var(--dark-text); */
+        }
+
+        .dark-mode .chatbot .chatbox .chat.incoming p {
+            background: var(--light-bg);
+            color: var(--light-text);
+        }
+
+        .dark-mode .chatbot .chat-input {
+            /* background: var(--dark-bg);
+            color: var(--dark-text); */
+        }
+
+        .dark-mode .chatbot .chat-input textarea {
+            /* background: var(--dark-bg);
+            color: var(--dark-text); */
+        }
+
+        .dark-mode .chatbot .chat-input span {
+            color: var(--dark-text);
+        }
+
+
+
+        .material-symbols-outlined {
+            color: var(--light-color);
+            transition: color var(--transition-speed) ease;
+        }
+
+        .dark-mode .material-symbols-outlined {
+            color: var(--dark-color);
+        }
+    </style>
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+
+<body class="sm:px-10 md:px-10 lg:px-20 xl:px-60 justify-center items-center">
+    <!-- Existing body content here -->
+    <nav id="navbar"
+        class="fixed top-0 left-0 w-full flex justify-between items-center px-5 py-3 z-50 sm:px-10 md:px-10 lg:px-20 xl:px-60">
+        <div class="flex space-x-4">
+            <a href="#about" class="flex items-center">
+                <img id="cake-icon" src="static/tools.svg" class="icon-svg2">
+
+                <p id="company-name" class="text-xl font-bold" style="padding-left: 10px">Acme</p>
+
+            </a>
+            <div class="hidden md:flex lg:flex" style="margin-top: 3px; padding-left: 4px">
+                <a href="#about" class="hover:underline pl-8" aria-label="About section">About</a>
+                <span style="padding-left: 20px"></span>
+                <a href="#products" class="hover:underline" aria-label="Contents section">Services</a>
+                <span style="padding-left: 20px"></span>
+                <a href="#cart" class="hover:underline" aria-label="Contact section">Contact</a>
+            </div>
+        </div>
+
+        <div class="flex items-center">
+            <div id="cart-total" style="padding-right: 20px; display: none;">
+                €0
+            </div>
+            <svg height="20px" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" />
+            </svg>
+
+            <svg height="30px" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <rect width="20" height="20" x="2" y="2" rx="5" ry="5" stroke-width="2"></rect>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zM17.5 6.5h.01"></path>
+            </svg>
+
+            <div onclick="toggleDarkMode()" aria-label="Toggle section" class="h-6 w-6 text-gray-400 mr-2">
+                <div id="theme-icon2" style="height: 20px"></div>
+            </div>
+
+            <a href="#toggle" onclick="toggleDarkMode()" id="darkModeToggle" class="hover:underline mr-4 ml-5"
+                aria-label="Toggle section">Login</a>
+
+            <div class="lg:hidden md:hidden">
+                <button id="nav-toggle" class="focus:outline-none">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden absolute bg-gray-800 w-full top-14 lg:hidden">
+            <div class="px-2 py-3">
+                <a href="#about" class="block text-white hover:text-gray-300 py-2" onclick="toggleMobileMenu()">Home</a>
+                <a href="#about" class="block text-white hover:text-gray-300 py-2"
+                    onclick="toggleMobileMenu()">About</a>
+                <a href="#products" class="block text-white hover:text-gray-300 py-2"
+                    onclick="toggleMobileMenu()">Products</a>
+                <a href="#cart" class="block text-white hover:text-gray-300 py-2" onclick="toggleMobileMenu()">Cart</a>
+            </div>
+        </div>
+    </nav>
+
+    <section id="about" class="bg-cover bg-center pt-5">
+        <div class="w-full py-12 md:py-24 lg:py-32">
+            <div class="container grid items-center gap-6 px-4 md:px-6 lg:grid-cols-2 lg:gap-12">
+                <div class="space-y-4">
+                    <h1 id="main-product-message"
+                        class="text-4xl font-bold tracking-tight sm:text-5xl md:text-4xl lg:text-5xl">
+                        This is the Main Product Message. Now €99.00
+                    </h1>
+                    <p id="product-description" class="accent-color">
+                        Generic but descriptive text about the product or service. This
+                        part has more text, describes the products or services and states
+                        that next you will see the main call to action buttons.
+                    </p>
+                    <div class="flex flex-col gap-2 sm:flex-row">
+                        <button id="get-started-btn"
+                            class="btn inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 hover:bg-lighter">
+                            Get Started
+                        </button>
+                        <!-- <button onclick="addToCart('Best Seller Cheese Cake', 20, 'price_1PE9xaHZkD7QNf2hq8eqRR74')"
+                            class="btn btn-inverted inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 border border-current hover:bg-darker">
+                            Contact
+                        </button> -->
+                        <button onclick="toggleChatbot()"
+                            class="btn btn-inverted inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 border border-current hover:bg-darker">
+                            Contact
+                        </button>
+                    </div>
+
+                </div>
+                <img src="static/handyman.png" width="800" height="600" alt="Hero Image"
+                    class="mx-auto aspect-video overflow-hidden rounded-xl object-cover" />
+            </div>
+        </div>
+        <div class="w-full py-12 md:py-24 lg:py-32">
+            <div class="container space-y-12 px-4 md:px-6">
+                <div class="flex flex-col items-center justify-center space-y-4 text-center">
+                    <div class="space-y-2">
+                        <div id="key-features-label" class="inline-block rounded-lg px-3 py-1 text-sm"> - Key Features -
+                        </div>
+                        <h2 id="product-line-reason" class="text-3xl font-bold tracking-tighter sm:text-5xl">Why Choose
+                            the Acme Product Line?</h2>
+                        <p id="product-line-description" class="accent-color"
+                            class="max-w-[900px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed ">
+                            Soft, durable, and perfect for everyday wear. Designed with your comfort in mind.
+                        </p>
+                    </div>
+                </div>
+                <div
+                    class="mx-auto grid items-start gap-8 sm:max-w-4xl sm:grid-cols-2 md:gap-12 lg:max-w-5xl lg:grid-cols-3">
+                    <div class="grid gap-1">
+                        <h3 id="feature-1-title" class="text-lg font-bold">Soft and Comfortable</h3>
+                        <p id="feature-1-description" class="accent-color" class="text-sm">
+                            Made with 60% combed ringspun cotton for a soft, breathable feel.
+                        </p>
+                    </div>
+                    <div class="grid gap-1">
+                        <h3 id="feature-2-title" class="text-lg font-bold">Durable Construction</h3>
+                        <p id="feature-2-description" class="accent-color" class="text-sm">
+                            Reinforced seams and high-quality materials ensure long-lasting wear.
+                        </p>
+                    </div>
+                    <div class="grid gap-1">
+                        <h3 id="feature-3-title" class="text-lg font-bold">Versatile Style</h3>
+                        <p id="feature-3-description" class="accent-color" class="text-sm ">
+                            The classic circle design pairs well with any outfit, for any occasion.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="products" class="bg-cover bg-center pt-10">
+        <div class="w-full py-12 md:py-24 lg:py-32">
+            <div class="py-8">
+                <h2 id="products-label" class="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
+                    Products
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <img alt="First Product Image" class="w-full h-64 object-cover object-center rounded-lg"
+                            src="static/producto1.jpg" style="aspect-ratio: 16/9" />
+                        <h3 id="first-product-title" class="text-lg md:text-xl lg:text-2xl font-bold mb-2 mt-4">
+                            First Product
+                        </h3>
+                        <p id="first-product-description" class="accent-color">
+                            This is a brief summary of the first product. It includes details and specifications of this
+                            product.
+                        </p>
+                        <!-- <div style="margin-top: 8px">
+                            <span class="mt-4 mr-4">€29.99</span>
+                            <button onclick="addToCart('Classic Cheesecake', 29.99, 'price_1PH0r1HZkD7QNf2hRY3w7XVX')"
+                                class="btn inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 hover:bg-lighter">
+                                Add to cart
+                            </button>
+                        </div> -->
+                    </div>
+                    <div>
+                        <img alt="Second Product Image" class="w-full h-64 object-cover object-center rounded-lg"
+                            src="static/producto2.jpg" style="aspect-ratio: 16/9" />
+                        <h3 id="second-product-title" class="text-lg md:text-xl lg:text-2xl font-bold mb-2 mt-4">
+                            Second Product
+                        </h3>
+                        <p id="second-product-description" class="accent-color">
+                            This is a brief summary of the second product. It includes details and specifications of
+                            this product.
+                        </p>
+                        <!-- <div style="margin-top: 8px">
+                            <span class="mt-4 mr-4">€30.00</span>
+                            <button onclick="addToCart('Lemon Bliss Cake', 30, 'price_1PH0wGHZkD7QNf2hFFbQKWbu')"
+                                class="btn inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 hover:bg-lighter">
+                                Add to cart
+                            </button>
+                        </div> -->
+                    </div>
+                    <div>
+                        <img alt="Third Product Image" class="w-full h-64 object-cover object-center rounded-lg"
+                            src="static/producto3.jpg" style="aspect-ratio: 16/9" />
+                        <h3 id="third-product-title" class="text-lg md:text-xl lg:text-2xl font-bold mb-2 mt-4">
+                            Third Product
+                        </h3>
+                        <p id="third-product-description" class="accent-color">
+                            This is a brief summary of the third product. It includes details and specifications of this
+                            product.
+                        </p>
+                        <!-- <div style="margin-top: 8px">
+                            <span class="mt-4 mr-4">€19.99</span>
+                            <button onclick="addToCart('Mascarpone Heaven', 19.99, 'price_1PH0wvHZkD7QNf2hez1RX7Df')"
+                                class="btn inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 hover:bg-lighter">
+                                Add to cart
+                            </button>
+                        </div> -->
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="cart" class="bg-cover bg-center flex justify-center items-center min-h-screen" style="display: none;">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <h1 class="text-2xl font-bold mb-6">Your Cart</h1>
+            <div class="bg-white rounded-lg shadow-md">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-gray-100 text-gray-600 font-medium">
+                            <th class="py-3 px-4 text-left" style="width: 50%">Product</th>
+                            <th class="py-3 px-4 text-right" style="width: 16%">Price</th>
+                            <th class="py-3 px-4 text-right" style="width: 16%">Quantity</th>
+                            <th class="py-3 px-4 text-right" style="width: 18%">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cart-items">
+                        <!-- Dynamic cart items will be inserted here -->
+                    </tbody>
+                </table>
+                <div class="py-4 px-4 flex justify-end">
+                    <div class="text-right">
+                        <p class="text-gray-500">Total</p>
+                        <div id="total-price" class="text-2xl font-bold text-gray-600">€0.00</div>
+                    </div>
+                </div>
+            </div>
+            <div class="py-4 px-4 flex justify-between">
+                <button onclick="clearCart()" class="px-4 py-2 rounded">Clear Cart</button>
+                <button id="checkout-button"
+                    class="wide-button btn inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 hover:bg-lighter">
+                    Buy
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="w-full py-8">
+        <div class="container mx-auto flex flex-col items-center justify-between gap-6 px-4 md:flex-row md:gap-0">
+            <div class="flex items-center gap-2">
+
+                <span id="footer-company-name" class="text-lg font-medium">Acme Inc</span>
+            </div>
+            <nav class="flex flex-wrap items-center justify-center gap-4 md:justify-end">
+                <a class="text-sm hover:text-gray-300" href="#about">Home</a>
+                <a class="text-sm hover:text-gray-300" href="#">About</a>
+                <a class="text-sm hover:text-gray-300" href="#products">Services</a>
+                <a class="text-sm hover:text-gray-300" href="#cart">Cart</a>
+            </nav>
+            <p id="footer-text" class="text-sm">© 2024 Acme Inc. </p>
+        </div>
+    </footer>
+
+    <div id="notification"></div>
+
+    <button class="chatbot-toggler">
+        <span class="material-symbols-outlined">&#xe0b7;</span>
+        <span class="material-symbols-outlined">close</span>
+    </button>
+    <div class="chatbot">
+        <header>
+            <h2>Customer Support</h2>
+            <span class="close-btn material-symbols-outlined">close</span>
+        </header>
+        <ul class="chatbox">
+            <li class="chat incoming">
+                <span class="material-symbols-outlined">smart_toy</span>
+                <p>Welcome to Couleur Cake 👋<br>How can I help you today?</p>
+            </li>
+        </ul>
+        <div class="chat-input">
+            <textarea placeholder="Enter a message..." spellcheck="false" required></textarea>
+            <span id="send-btn" class="material-symbols-rounded">send</span>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const textContent = {
+                "companyName": "Handyman Harrison",
+                "mainProductMessage": "Reliable Household Maintenance Services. Quality Workmanship Starting at €25.00 per hour",
+                "productDescription": "Welcome to Handyman Harrison, your go-to expert for all your household maintenance needs. From carpentry to basic plumbing, our skilled craftsmanship ensures your home projects are completed with precision and care.",
+                "getStartedBtn": "Book Now",
+                "keyFeaturesLabel": "- Key Services -",
+                "productLineReason": "Why Choose Handyman Harrison?",
+                "productLineDescription": "Expertise, reliability, and personalized service. Experience the difference with our comprehensive home maintenance solutions.",
+                "feature1Title": "General Maintenance",
+                "feature1Description": "Keep your home in top condition with our general maintenance services.",
+                "feature2Title": "Custom Carpentry",
+                "feature2Description": "Enhance your home with custom carpentry solutions tailored to your needs.",
+                "feature3Title": "Furniture Assembly",
+                "feature3Description": "Effortlessly put together your furniture with our professional assembly services.",
+                "productsLabel": "Our Services",
+                "firstProductTitle": "General Maintenance",
+                "firstProductDescription": "From minor repairs to routine upkeep, we handle all your home maintenance needs.",
+                "secondProductTitle": "Custom Carpentry",
+                "secondProductDescription": "Bespoke carpentry solutions designed to enhance the beauty and functionality of your home.",
+                "thirdProductTitle": "Furniture Assembly",
+                "thirdProductDescription": "Quick and reliable furniture assembly, ensuring your pieces are put together correctly and safely.",
+                "footerCompanyName": "Handyman Harrison",
+                "footerText": "© 2024 Handyman Harrison. "
+            };
+
+
+            document.getElementById("company-name").textContent = textContent.companyName;
+            document.getElementById("main-product-message").textContent = textContent.mainProductMessage;
+            document.getElementById("product-description").textContent = textContent.productDescription;
+            document.getElementById("get-started-btn").textContent = textContent.getStartedBtn;
+            document.getElementById("key-features-label").textContent = textContent.keyFeaturesLabel;
+            document.getElementById("product-line-reason").textContent = textContent.productLineReason;
+            document.getElementById("product-line-description").textContent = textContent.productLineDescription;
+            document.getElementById("feature-1-title").textContent = textContent.feature1Title;
+            document.getElementById("feature-1-description").textContent = textContent.feature1Description;
+            document.getElementById("feature-2-title").textContent = textContent.feature2Title;
+            document.getElementById("feature-2-description").textContent = textContent.feature2Description;
+            document.getElementById("feature-3-title").textContent = textContent.feature3Title;
+            document.getElementById("feature-3-description").textContent = textContent.feature3Description;
+            document.getElementById("products-label").textContent = textContent.productsLabel;
+            document.getElementById("first-product-title").textContent = textContent.firstProductTitle;
+            document.getElementById("first-product-description").textContent = textContent.firstProductDescription;
+            document.getElementById("second-product-title").textContent = textContent.secondProductTitle;
+            document.getElementById("second-product-description").textContent = textContent.secondProductDescription;
+            document.getElementById("third-product-title").textContent = textContent.thirdProductTitle;
+            document.getElementById("third-product-description").textContent = textContent.thirdProductDescription;
+            document.getElementById("footer-company-name").textContent = textContent.footerCompanyName;
+            document.getElementById("footer-text").textContent = textContent.footerText;
+
+            document.querySelectorAll("nav a").forEach((link) => {
+                link.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute("href"));
+                    target.scrollIntoView({ behavior: "smooth" });
+                });
+            });
+
+            // Other initialization code
+            const isDarkMode = localStorage.getItem("darkMode") === "true";
+            document.body.classList.toggle("dark-mode", isDarkMode);
+            document.getElementById("cake-icon").src = isDarkMode ? "static/cake-dark.svg" : "static/cake-light.svg";
+
+            document.getElementById("theme-icon2").innerHTML = isDarkMode ? '<img src="static/sun4.svg" class="icon-svg" alt="S">' : '<img src="static/moon4.svg" class="icon-svg" alt="M">';
+            updateCartTotal();
+            renderCartItems();
+
+            const apiBaseUrl = "https://couleur-cake.vercel.app";
+
+            const chatbotToggler = document.querySelector(".chatbot-toggler");
+            const closeBtn = document.querySelector(".close-btn");
+            const chatbox = document.querySelector(".chatbox");
+            const chatInput = document.querySelector(".chat-input textarea");
+            const sendChatBtn = document.querySelector(".chat-input span");
+            let userMessage = null; // Variable to store user's message
+            const inputInitHeight = chatInput.scrollHeight;
+
+            var initialThreadID = null;
+
+            const createChatLi = (message, className) => {
+                // Create a chat <li> element with passed message and className
+                const chatLi = document.createElement("li");
+                chatLi.classList.add("chat", `${className}`);
+                let chatContent =
+                    className === "outgoing"
+                        ? `<p></p>`
+                        : `<span class="material-symbols-outlined">smart_toy</span><p></p>`;
+                chatLi.innerHTML = chatContent;
+                chatLi.querySelector("p").textContent = message;
+                return chatLi; // return chat <li> element
+            };
+
+            const generateResponse = (chatElement) => {
+                const API_URL = `${apiBaseUrl}/chat`; // Use the correct endpoint
+                const messageElement = chatElement.querySelector("p");
+
+                if (initialThreadID === null) {
+                    messageElement.classList.add("error");
+                    messageElement.textContent =
+                        "Oops! Something went wrong. Please try again.";
+                    return;
+                }
+
+                // Define the properties and message for the API request
+                const requestOptions = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        thread_id: initialThreadID,
+                        message: userMessage,
+                    }),
+                };
+
+                // Send POST request to API, get response and set the response as paragraph text
+                fetch(API_URL, requestOptions)
+                    .then((res) => res.json())
+                    .then((data) => {
+                        messageElement.textContent = data.response.trim();
+                    })
+                    .catch(() => {
+                        messageElement.classList.add("error");
+                        messageElement.textContent =
+                            "Oops! Something went wrong. Please try again.";
+                    })
+                    .finally(() => chatbox.scrollTo(0, chatbox.scrollHeight));
+            };
+
+            const handleChat = () => {
+                userMessage = chatInput.value.trim(); // Get user entered message and remove extra whitespace
+                if (!userMessage) return;
+
+                // Clear the input textarea and set its height to default
+                chatInput.value = "";
+                chatInput.style.height = `${inputInitHeight}px`;
+
+                // Append the user's message to the chatbox
+                chatbox.appendChild(createChatLi(userMessage, "outgoing"));
+                chatbox.scrollTo(0, chatbox.scrollHeight);
+
+                setTimeout(() => {
+                    // Display "Thinking..." message while waiting for the response
+                    const incomingChatLi = createChatLi("Thinking...", "incoming");
+                    chatbox.appendChild(incomingChatLi);
+                    chatbox.scrollTo(0, chatbox.scrollHeight);
+                    generateResponse(incomingChatLi);
+                }, 600);
+            };
+
+            chatInput.addEventListener("input", () => {
+                // Adjust the height of the input textarea based on its content
+                chatInput.style.height = `${inputInitHeight}px`;
+                chatInput.style.height = `${chatInput.scrollHeight}px`;
+            });
+
+            chatInput.addEventListener("keydown", (e) => {
+                // If Enter key is pressed without Shift key and the window
+                // width is greater than 800px, handle the chat
+                if (e.key === "Enter" && !e.shiftKey && window.innerWidth > 800) {
+                    e.preventDefault();
+                    handleChat();
+                }
+            });
+
+            async function initialRequest() {
+                try {
+                    // Make an initial request to start a new conversation
+                    const startResponse = await fetch(`${apiBaseUrl}/start`, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    });
+
+                    if (!startResponse.ok) {
+                        throw new Error(`HTTP error! Status: ${startResponse.status}`);
+                    }
+
+                    const startData = await startResponse.json();
+                    initialThreadID = startData.thread_id;
+                } catch (error) {
+                    console.error("Error:", error.message);
+                }
+            }
+
+            // initializing the thread id
+            initialRequest()
+
+            sendChatBtn.addEventListener("click", handleChat);
+            closeBtn.addEventListener("click", () =>
+                document.body.classList.remove("show-chatbot")
+            );
+            chatbotToggler.addEventListener("click", () =>
+                document.body.classList.toggle("show-chatbot")
+            );
+        });
+
+        function toggleDarkMode() {
+            const isDarkMode = document.body.classList.toggle("dark-mode");
+            localStorage.setItem("darkMode", isDarkMode);
+            document.getElementById("theme-icon2").innerHTML = isDarkMode ? '<img src="static/sun4.svg" class="icon-svg" alt="S">' : '<img src="static/moon4.svg" class="icon-svg" alt="M">';
+            document.getElementById("cake-icon").src = isDarkMode ? "static/cake-dark.svg" : "static/cake-light.svg";
+
+        }
+
+        let notificationTimeout;
+
+        function showNotification(message) {
+            const notification = document.getElementById("notification");
+            notification.innerText = message;
+            notification.style.display = "block";
+            clearTimeout(notificationTimeout);
+            notificationTimeout = setTimeout(() => {
+                notification.style.display = "none";
+            }, 1000);
+        }
+
+        function addToCart(productName, price, priceCode) {
+            let cart = JSON.parse(localStorage.getItem("cart") || "{}");
+            if (cart[productName]) {
+                cart[productName].quantity += 1;
+                cart[productName].total = cart[productName].quantity * price;
+            } else {
+                cart[productName] = {
+                    price: price,
+                    quantity: 1,
+                    total: price,
+                    priceCode: priceCode
+                };
+            }
+            localStorage.setItem("cart", JSON.stringify(cart));
+            updateCartTotal();
+            renderCartItems();
+            showNotification(`${productName} added to cart!`);
+        }
+
+        function updateCartTotal() {
+            let cart = JSON.parse(localStorage.getItem("cart") || "{}");
+            let total = 0;
+            Object.keys(cart).forEach((key) => {
+                total += cart[key].total;
+            });
+            document.getElementById("cart-total").innerText = `€${total.toFixed(2)}`;
+            document.getElementById("total-price").innerText = `€${total.toFixed(2)}`;
+        }
+
+        function renderCartItems() {
+            let cart = JSON.parse(localStorage.getItem("cart") || "{}");
+            const cartItemsElement = document.getElementById("cart-items");
+            cartItemsElement.innerHTML = "";
+
+            const keys = Object.keys(cart);
+            let filledRows = keys.length;
+            let emptyRows = 4 - filledRows;
+
+            keys.forEach((key) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+            <td class="py-4 px-4 text-left flex items-center">
+                <div class="w-12 h-12 bg-gray-200 rounded-md mr-4"></div>
+                <div>
+                    <p class="font-medium text-gray-600">${key}</p>
+                    <p class="text-gray-500 text-sm">ID: ${cart[key].id || "N/A"}</p>
+                </div>
+            </td>
+            <td class="py-4 px-4 text-right text-gray-600">€${cart[key].price.toFixed(2)}</td>
+            <td class="py-4 px-4 text-right text-gray-600">
+                <div class="flex items-center justify-end">
+                  <button onclick="decreaseQuantity('${key}')" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10 mr-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="h-4 w-4"
+                  >
+                    <path d="M5 12h14"></path>
+                  </svg>
+                </button>
+                                    <span class="mx-2">${cart[key].quantity}</span>
+                                    <button onclick="increaseQuantity('${key}')" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10 ml-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="h-4 w-4"
+                  >
+                    <path d="M5 12h14"></path>
+                    <path d="M12 5v14"></path>
+                  </svg>
+                </button>
+                </div>
+            </td>
+            <td class="py-4 px-4 text-right text-gray-600 ">€${cart[key].total.toFixed(2)}</td>
+        `;
+                cartItemsElement.appendChild(row);
+            });
+
+            if (emptyRows > 0) {
+                for (let i = 0; i < emptyRows; i++) {
+                    const emptyRow = document.createElement("tr");
+                    emptyRow.innerHTML = `
+                <td class="py-4 px-4 text-left"></td>
+                <td class="py-4 px-4 text-right"></td>
+                <td class="py-4 px-4 text-right"></td>
+                <td class="py-4 px-4 text-right"></td>
+            `;
+                    cartItemsElement.appendChild(emptyRow);
+                }
+            }
+
+            updateCartTotal();
+        }
+
+        function increaseQuantity(productName) {
+            let cart = JSON.parse(localStorage.getItem("cart") || "{}");
+            if (cart[productName]) {
+                cart[productName].quantity += 1;
+                cart[productName].total = cart[productName].quantity * cart[productName].price;
+                localStorage.setItem("cart", JSON.stringify(cart));
+                renderCartItems();
+            }
+        }
+
+        function decreaseQuantity(productName) {
+            let cart = JSON.parse(localStorage.getItem("cart") || "{}");
+            if (cart[productName] && cart[productName].quantity > 1) {
+                cart[productName].quantity -= 1;
+                cart[productName].total = cart[productName].quantity * cart[productName].price;
+                localStorage.setItem("cart", JSON.stringify(cart));
+                renderCartItems();
+            } else if (cart[productName] && cart[productName].quantity === 1) {
+                delete cart[productName];
+                localStorage.setItem("cart", JSON.stringify(cart));
+                renderCartItems();
+            }
+        }
+
+        function clearCart() {
+            localStorage.setItem("cart", "{}");
+            updateCartTotal();
+            renderCartItems();
+        }
+
+        const navToggle = document.getElementById("nav-toggle");
+        const mobileMenu = document.getElementById("mobile-menu");
+
+        navToggle.addEventListener("click", () => {
+            mobileMenu.classList.toggle("hidden");
+        });
+
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById("mobile-menu");
+            mobileMenu.classList.toggle("hidden");
+        }
+
+        // Stripe Checkout
+        const stripe = Stripe('pk_test_51PE9uFHZkD7QNf2h5IyGdh9t3UfP9q5rCPbjsTBGss5Poo86eGmtiknPZ8YM6nQ7zbEkVjA65yLvwsqDKSKcXF2i00Ka8UPS0v');
+
+        document.getElementById('checkout-button').addEventListener('click', async () => {
+            const cart = JSON.parse(localStorage.getItem('cart') || '{}');
+            const items = Object.values(cart).map(item => ({
+                priceCode: item.priceCode,
+                quantity: item.quantity
+            }));
+
+            try {
+                const response = await fetch('/create-checkout-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ cart: items }),
+                });
+
+                const text = await response.text();
+                console.log('Server response:', text);
+
+                const session = JSON.parse(text);
+
+                if (session.error) {
+                    alert(session.error);
+                    return;
+                }
+
+                const result = await stripe.redirectToCheckout({
+                    sessionId: session.id,
+                });
+
+                if (result.error) {
+                    alert(result.error.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('There was an error processing your request.');
+            }
+        });
+    </script>
+</body>
+
+</html>
